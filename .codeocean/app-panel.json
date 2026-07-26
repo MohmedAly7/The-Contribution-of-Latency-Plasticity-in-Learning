@@ -1,0 +1,32 @@
+{
+	"version": 1,
+	"parameters": [
+		{
+			"id": "uZXvsP1F309DXaAN",
+			"name": "figureNumber",
+			"help_text": "Enter the figure number to run",
+			"type": "list",
+			"value_type": "integer",
+			"default_value": "1",
+			"extra_data": [
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8"
+			]
+		},
+		{
+			"id": "vyQ1kdU1xKHzAM5r",
+			"name": "PRE-data",
+			"description": "To run using pre data without compile the c++ code",
+			"help_text": "This variable help draw figure without run C++ code using pre-generated data (only type \"data\")",
+			"type": "text",
+			"value_type": "string",
+			"default_value": "data"
+		}
+	]
+}

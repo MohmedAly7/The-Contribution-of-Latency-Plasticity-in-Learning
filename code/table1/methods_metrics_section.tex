@@ -1,0 +1,48 @@
+% ==============================================================================
+% LATEX METRICS SUBSECTION (CLEANED SUBSCRIPTS: Target neuron i, Presynaptic pair ja, jb)
+% ==============================================================================
+
+\subsection{Metric Formulations}
+\label{sec:metric_formulations}
+
+We evaluate the trained networks across noise conditions using four quantitative metrics derived from the output spike trains, synaptic weight matrix $\omega_{ij}$, and transmission latency matrix $l_{ij}$.
+
+\subsubsection{Polychronous Group Count (PG-Count)}
+To identify structural polychronous neural groups (PNGs), we test all pairs of active input neurons $(j_a, j_b)$ as potential triggers across initial firing delays $\Delta t_{ab} = t_{j_b} - t_{j_a} \in [0, 30\,\text{ms}]$. A target postsynaptic neuron $i$ is recruited into the cascade if two or more presynaptic spikes arrive within an integration window of $\tau_{\text{win}} = 2.0\,\text{ms}$ over potentiated synapses ($\omega_{i j_a} \ge 0.04 \cdot \omega_{\max}$ and $\omega_{i j_b} \ge 0.04 \cdot \omega_{\max}$):
+\begin{equation}
+| (t_{j_a} + l_{i j_a}) - (t_{j_b} + l_{i j_b}) | \le \tau_{\text{win}}
+\end{equation}
+We allow spike propagation to continue iteratively until no further target neurons are recruited. A sequence is classified as a valid PNG if the trigger pair recruits at least three subsequent neurons (total group size $|G| \ge 5$). The total count of unique valid groups ($N_{\text{PG}}$) is given by:
+\begin{equation}
+\text{PG-Count} = \sum_{(j_a, j_b), \Delta t_{ab}} \mathbf{1}\left(|G(j_a, j_b, \Delta t_{ab})| \ge 5\right)
+\end{equation}
+
+\subsubsection{Maximum Activation Cascade Duration (M-Cascade)}
+For each identified group $G$ with individual target spike times $\{t_i\}_{i \in G}$, we calculate its total cascade duration $T(G)$:
+\begin{equation}
+T(G) = \max_{i \in G}(t_i) - \min_{i \in G}(t_i) \quad [\text{ms}]
+\end{equation}
+We define M-Cascade as the longest propagation duration observed among all detected PNGs:
+\begin{equation}
+\text{M-Cascade} = \max_{G} T(G) \quad [\text{ms}]
+\end{equation}
+
+\subsubsection{Spike Arrival Coincidence Index (S-Coincidence)}
+To measure the temporal convergence of incoming inputs, we count presynaptic arrivals $t_{ij} = t_j + l_{ij}$ from presynaptic neurons $j$ landing in a $2.0\,\text{ms}$ window immediately preceding each action potential $t_i^{(m)}$ of target neuron $i$:
+\begin{equation}
+C\left(t_i^{(m)}\right) = \sum_{j \in \text{pre}(i)} \mathbf{1}\left( t_i^{(m)} - \tau_{\text{win}} \le t_{ij} \le t_i^{(m)} \right)
+\end{equation}
+The S-Coincidence index is the average count across all $N_{\text{firings}}$ action potentials emitted by active target neurons $i \in A$:
+\begin{equation}
+\text{S-Coincidence} = \frac{1}{N_{\text{firings}}} \sum_{i \in A} \sum_{k=1}^{K_i} C\left(t_i^{(m), k}\right)
+\end{equation}
+
+\subsubsection{Average Pairwise Spike Timing Jitter Percentage (S-Jitter)}
+We measure inter-neuron phase variability by computing pairwise spike-timing jitter. For each pair of active neurons $(i, j)$ with mean firing periods $p_i$ and $p_j$, we construct a cross-correlogram of spike time differences $\Delta t = t_j - t_i$ in a $[-50\,\text{ms}, +50\,\text{ms}]$ window. We locate the primary correlation peak $\tau_{\text{peak}}$ and extract all time differences within $\pm 3\,\text{ms}$ of this peak. We compute their standard deviation $\sigma_{\Delta t}$ and normalize by the mean firing period $p_{\text{avg}} = \frac{p_i + p_j}{2}$:
+\begin{equation}
+J_{ij} = \left( \frac{\sigma_{\Delta t}}{p_{\text{avg}}} \right) \times 100\%
+\end{equation}
+The network-wide S-Jitter is the average across all $|P_{\text{valid}}|$ co-firing active pairs:
+\begin{equation}
+\text{S-Jitter} = \frac{1}{|P_{\text{valid}}|} \sum_{(i,j) \in P_{\text{valid}}} J_{ij} \quad [\%]
+\end{equation}
