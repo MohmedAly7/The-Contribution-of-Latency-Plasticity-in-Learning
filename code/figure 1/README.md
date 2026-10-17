@@ -24,4 +24,4 @@ The neuron is driven by a Poisson pulse train with a target average current of 2
 ## Expected Results
 - **Panel A:** Stochastic fluctuations in membrane potential with clearly defined spikes and resets.
 - **Panel B:** The corresponding Poisson-distributed input current pulses.
-- **Panel C:** A Firing period histogram following an exponential-like distribution, characteristic of Poisson-driven LIF neurons.
+- **Panel C:** A narrow, bell-shaped (Gaussian-like) firing period histogram centered around ~120 ms, demonstrating that the LIF neuron integrates high-rate Poisson input (~636.4 Hz) to produce a nearly periodic firing output.

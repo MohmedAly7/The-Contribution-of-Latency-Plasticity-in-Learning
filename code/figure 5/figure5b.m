@@ -36,21 +36,21 @@ fprintf('Membrane time constant (τ_m) = %.1f ms\n\n', tau_m * 1000);
 %% 2. DEFINE YOUR CUSTOM INPUT PATTERNS HERE
 cases = {
     % --- PATTERN 1: Constant Regular Pulses ---
-    struct('label', 'Regular Pulses', ...
+    struct('label', 'Regular pulses', ...
+           'num_pulses', 6, ...
+           'amplitudes', [150, 1550, 1550, 1550, 1550, 1550], ...      % pA
+           'durations', [200, .2, .2, .2, .2, .2], ...                 % ms
+           'start_times', [0, 15, 15.25, 15.50, 15.75, 16], ...        % ms
+           'color', [0.8500, 0.3250, 0.0980], ...                      % Orange
+           'line_style', '-'); 
+    % --- PATTERN 2: Regular Pulses with an Extraneous Spike ---
+    struct('label', 'Extraneous pulses', ...
            'num_pulses', 7, ...
-           'amplitudes', [150, 150, 1550, 1550, 1550,1550,1550], ...      % pA
-           'durations', [200, .2, .2, .2, .2,.2,.2], ...                 % ms
-           'start_times', [00, 5, 15, 15.50, 15.25,15.75,16], ...          % ms
-           'color', [0.8500, 0.3250, 0.0980],...               % Orange
-           'line_style','-'); 
-    % --- PATTERN 2: Clustered High-Frequency Burst ---
-  struct('label', 'stride Pulses', ...
-           'num_pulses', 9, ...
-           'amplitudes', [150, 150, 1550,  1550, 1550, 1550,1550,1550,150], ...      % pA
-           'durations', [200, .2, .2, .2, .2,.2,.2,.2,.2], ...                 % ms
-           'start_times', [00, 5, 15, 15.50, 15.25,15.75,16,7,3], ... 
-           'color', [0, 0.4470, 0.7410], ...
-           'line_style',':');                    % Blue
+           'amplitudes', [150, 1550, 1550, 1550, 1550, 1550, 1550], ... % pA
+           'durations', [200, .2, .2, .2, .2, .2, .2], ...              % ms
+           'start_times', [0, 7, 15, 15.25, 15.50, 15.75, 16], ...      % ms
+           'color', [0, 0.4470, 0.7410], ...                            % Blue
+           'line_style', ':');
 };
 
 %% 3. Validate and Convert Input Parameters
@@ -103,16 +103,14 @@ tiledlayout(2, 1, 'TileSpacing', 'tight', 'Padding', 'compact');
 % --- Panel A: Membrane Potential with reduced margins ---
 ax1 = nexttile;
 hold(ax1, 'on');
-title('A. Membrane Potential Response', 'FontSize', 14, 'FontWeight', 'bold');
-ylabel('Membrane Potential (mV)', 'FontSize', font_size, 'FontWeight', 'bold');
+ylabel({'Membrane', 'potential (mV)'}, 'FontSize', font_size);
 grid on; box off;
 
 % --- Panel B: Input Current with reduced margins ---
-ax2 =  nexttile;
+ax2 = nexttile;
 hold(ax2, 'on');
-title('B. Input Current Patterns', 'FontSize', 14, 'FontWeight', 'bold');
-xlabel('Time (ms)', 'FontSize', font_size, 'FontWeight', 'bold');
-ylabel('Current (pA)', 'FontSize', font_size, 'FontWeight', 'bold');
+xlabel('Time (ms)', 'FontSize', font_size);
+ylabel('Current (nA)', 'FontSize', font_size);
 grid on; box off;
 
 % REDUCE THE SPACING BETWEEN SUBPLOTS
@@ -161,7 +159,7 @@ for k = 1:num_cases
     label_str = sprintf('%s (%d spikes)', cases{k}.label, spike_counts(k));
     voltage_handles(k) = plot(ax1, t*1000, v*1000, 'Color', case_color, ...
                               'LineWidth', 2.5, 'DisplayName', label_str,'LineStyle',case_line);
-    plot(ax2, t*1000, current_I_vec*1e12, 'Color', case_color, ...
+    plot(ax2, t*1000, current_I_vec*1e9, 'Color', case_color, ...
         'LineWidth', 2.5, 'DisplayName', cases{k}.label,'LineStyle',case_line);
     
     fprintf('%-25s | %6d | %10.2f\n', cases{k}.label, spike_counts(k), max_voltage*1000);
@@ -175,14 +173,14 @@ yline(ax1, V_rest * 1000, 'k:', 'Rest', 'LineWidth', 1.5, ...
       'FontSize', 10, 'LabelVerticalAlignment', 'bottom');
 
 % --- Add legends ---
-legend(ax1, voltage_handles, 'Location', 'northwest', 'FontSize', 10);
-legend(ax2, 'Location', 'northwest', 'FontSize', 10);
+legend(ax1, voltage_handles, 'Location', 'northwest', 'FontSize', 10, 'Box', 'off');
+legend(ax2, 'Location', 'northwest', 'FontSize', 10, 'Box', 'off');
 
 % --- Set axes properties ---
 linkaxes([ax1, ax2], 'x');
 xlim(ax1, [0 t_end*1000]);
 ylim(ax1, [-80 30]);
-set([ax1, ax2], 'FontSize', 11, 'FontWeight', 'bold');
+set([ax1, ax2], 'FontSize', 11);
 
 %% 7. Display Pattern Summary
 fprintf('\n=== PATTERN SUMMARY ===\n');

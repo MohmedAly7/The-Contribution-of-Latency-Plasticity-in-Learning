@@ -10,11 +10,11 @@
 
 This folder contains the code that produces both panels of Figure 5.
 
-**Panel a** (`figure_5a.cpp` + `figure5a.m`) uses a large-scale event-driven LIF network simulation (10 neurons, 40 million training events) to demonstrate how temporally clustered synaptic inputs summate and shorten the firing period of neuron $n_4$. The resulting spike raster is visualised in MATLAB.
+**Panel a** (`figure 5a.cpp` + `figure5a.m`) uses a large-scale event-driven LIF network simulation (10 neurons, 40 million training events) to demonstrate how temporally clustered synaptic inputs summate and shorten the firing period of neuron $n_1$. The resulting spike raster is visualised in MATLAB.
 
 **Panel b** (`figure5b.m`) is a standalone MATLAB LIF integrator that illustrates why a single extraneous spike produces negligible timing jitter: an early-arriving spike decays before threshold, while a late-arriving spike simply replaces the last aligned input within the brief coincidence window.
 
-> ⚠️ **The C++ simulation (`figure_5a.cpp`) is computationally intensive.** The main training loop runs **40 million events** followed by a second recording pass of 40,000 events. On a modern desktop CPU this typically takes **several minutes to over an hour** depending on clock speed and compiler optimisation level. Plan accordingly before running.
+> ⚠️ **The C++ simulation (`figure 5a.cpp`) is computationally intensive.** The main training loop runs **40 million events**, recording the final 1,000,000 events (`q > 39000000`). On a modern desktop CPU this typically takes **several minutes to over an hour** depending on clock speed and compiler optimisation level. Plan accordingly before running.
 
 ---
 
@@ -22,7 +22,7 @@ This folder contains the code that produces both panels of Figure 5.
 
 | File | Role | Output |
 |------|------|--------|
-| `figure_5a.cpp` | C++ event-driven LIF network — trains for 40 M events then records | `figure5a.neuron` |
+| `figure 5a.cpp` | C++ event-driven LIF network — trains for 40 M events and records the final 1 M events | `figure5a.neuron` |
 | `figure5a.m` | MATLAB spike raster viewer — reads `figure5a.neuron` and plots panel **a** | Figure window |
 | `figure5b.m` | MATLAB standalone LIF integrator — simulates two input patterns and plots panel **b** | Figure window |
 
@@ -160,8 +160,8 @@ Latencies are clipped to $[0.01,\, 80.01]$ ms to prevent unphysical values.
 
 | Pattern | Colour | Description |
 |---------|--------|-------------|
-| Regular Pulses | Orange (solid) | 7 pulses: one long background pulse + 6 aligned high-amplitude inputs at ~15 ms |
-| Extraneous Pulses | Blue (dotted) | 8 pulses: same as above but with one additional early-arriving extraneous spikes at 7 ms |
+| Regular pulses | Orange (solid) | 6 pulses: one continuous background current (150 pA) + 5 aligned high-amplitude inputs (1550 pA) at 15–16 ms |
+| Extraneous pulses | Blue (dotted) | 7 pulses: same as above but with one additional early-arriving extraneous spike (1550 pA) at 7 ms |
 
 
 
